@@ -6,7 +6,7 @@ issues_url 'https://github.com/ama-team/cookbook-ssh-private-keys/issues'
 license 'MIT'
 description 'Installs/Configures ama-ssh-private-keys'
 long_description 'Installs/Configures ama-ssh-private-keys'
-version '0.1.0'
+version '0.1.1'
 chef_version '>= 12', '< 14'
 
 supports 'ubuntu', '>= 12.04'
