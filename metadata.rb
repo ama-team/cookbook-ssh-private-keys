@@ -11,5 +11,5 @@ chef_version '>= 12', '< 14'
 
 supports 'ubuntu', '>= 12.04'
 supports 'debian', '>= 7.3'
-supports 'fedora', '>= 24'
+supports 'fedora', '>= 24.0'
 supports 'centos', '>= 6.0'
