@@ -1,8 +1,10 @@
 require 'tempfile'
+require 'English'
 
 module AMA
   module Chef
     module SSHPrivateKeys
+      # Validates provided key pair using ssh-keygen
       class Validator
         def initialize
           @binary = nil
@@ -10,22 +12,36 @@ module AMA
         end
 
         # @param [AMA::Chef::SSHPrivateKeys::Model::KeyPair] pair
-        def validate(pair)
+        def validate!(pair)
           lazy_initialize
-          return unless @binary
+          unless @binary
+            Chef::Log.warn(
+              "Can't validate key pair #{pair.id}: " \
+              'ssh-keygen executable not found'
+            )
+            return
+          end
           unless pair.private_key
             raise "Provided key pair #{pair.id} is missing private key"
           end
           public_key = generate_public_key(pair)
           unless pair.type == public_key.type
-            raise "Key pair specified type #{pair.type}, but #{public_key.type} was discovered"
+            message = "Key pair specified type #{pair.type}, but " \
+              "#{public_key.type} was discovered"
+            raise message
           end
-          if pair.public_key and pair.public_key != public_key.data
-            raise "Generated public key differs from provided public key #{pair.id}"
-          end
+          return unless pair.public_key && pair.public_key != public_key.data
+          message = [
+            'Generated public key differs from ' \
+              "provided public key `#{pair.id}`",
+            "Provided: #{pair.public_key}",
+            "Generated: #{public_key.data}"
+          ]
+          raise message.join(" #{$ORS}")
         end
 
         private
+
         def lazy_initialize
           return if @initialized
           @binary = locate_binary
@@ -39,20 +55,21 @@ module AMA
 
         def get_public_key_fingerprint(pair)
           execution = run_with_temporary_file(pair.public_key) do |path|
-            [@binary, '-l', '-f', path]
+            return [@binary, '-l', '-f', path]
           end
           if execution.error
             prefix = "Failed to generate fingerprint for public key #{pair.id}"
             raise generate_validation_error(execution, prefix)
           end
-
+          execution
         end
 
         # @param [AMA::Chef::SSHPrivateKeys::Model::KeyPair] pair
         # @return [AMA::Chef::SSHPrivateKeys::Model::PublicKey]
         def generate_public_key(pair)
-          execution = with_temporary_file(pair.private_key) do |path|
-            [@binary, '-y', '-f', path, '-P', pair.passphrase]
+          execution = run_with_temporary_file(pair.private_key) do |path|
+            passphrase = pair.passphrase.nil? ? '' : pair.passphrase
+            [@binary, '-y', '-f', path, '-P', passphrase]
           end
           if execution.error?
             prefix = "Failed to create public key from private key #{pair.id}"
@@ -70,17 +87,19 @@ module AMA
           end
         end
 
-        def run_with_temporary_file(content, &block)
+        def run_with_temporary_file(content)
           with_temporary_file(content) do |path|
-            Mixlib::ShellOut.new(&block.call(path)).run_command
+            command = yield(path)
+            ::Chef::Log.debug("Executing command: #{command}")
+            ::Mixlib::ShellOut.new(*command).run_command
           end
         end
 
-        def with_temporary_file(content, &block)
+        def with_temporary_file(content)
           target = Tempfile.new(['ama-ssh-private-keys-'])
           ::IO.write(target.path, content)
           begin
-            return block.call(target.path)
+            return yield(target.path)
           ensure
             target.close(true)
           end
@@ -93,10 +112,10 @@ module AMA
             prefix = "Error while running command #{execution.command}:"
           end
           message = [
-              prefix,
-              "STDOUT: #{execution.stdout}",
-              "STDERR: #{execution.stderr}"
-          ].join($\)
+            prefix,
+            "STDOUT: #{execution.stdout}",
+            "STDERR: #{execution.stderr}"
+          ].join(" #{$ORS}")
           AMA::Chef::SSHPrivateKeys::Model::InvalidKeyException.new(message)
         end
       end

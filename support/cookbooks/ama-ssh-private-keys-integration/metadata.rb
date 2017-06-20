@@ -1,6 +1,9 @@
 require 'chef/cookbook/metadata'
 
-parent_metadata_path = ::File.join((0..2).reduce(__dir__) { |_| ::File.dirname(_) }, 'metadata.rb')
+parent_cookbook_path = (0..2).reduce(__dir__) do |carrier|
+  File.dirname(carrier)
+end
+parent_metadata_path = File.join(parent_cookbook_path, 'metadata.rb')
 parent_metadata = Chef::Cookbook::Metadata.new
 parent_metadata.from_file(parent_metadata_path)
 

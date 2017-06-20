@@ -1,0 +1,13 @@
+env:
+  - PLATFORM=ubuntu
+  - PLATFORM=debian
+  - PLATFORM=centos
+  - PLATFORM=fedora
+
+script:
+  - bundle exec rubocop
+  - bundle exec foodcritic .
+  - bundle exec kitchen test $PLATFORM
+
+rvm:
+  - 2.3.0

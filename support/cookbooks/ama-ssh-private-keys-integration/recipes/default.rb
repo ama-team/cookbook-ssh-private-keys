@@ -1,6 +1,6 @@
 #
-# Cookbook:: ama-ssh-private-keys
-# Spec:: default
+# Cookbook:: ama-ssh-private-keys-integration
+# Recipe:: default
 #
 # The MIT License (MIT)
 #
@@ -24,17 +24,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-require_relative '../helper'
-
-describe 'ama-ssh-private-keys::default' do
-  context 'When all attributes are default, on an unspecified platform' do
-    let(:chef_run) do
-      runner = ChefSpec::ServerRunner.new(platform: 'ubuntu', version: '16.04')
-      runner.converge(described_recipe)
-    end
-
-    it 'converges successfully' do
-      expect { chef_run }.to_not raise_error
-    end
+node['ama-ssh-private-keys'].each do |id, definition|
+  key_from_attributes id do
+    source definition.fetch('source', id)
+    expects_failure definition.fetch('expects_failure', false)
+    perform_validation definition.fetch('perform_validation', true)
   end
 end

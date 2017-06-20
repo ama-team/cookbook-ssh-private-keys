@@ -1,23 +1,23 @@
 ---
 keys:
   alpha: &alpha
-    private: &alpha_private |
+    private_key: &alpha_private |
       -----BEGIN RSA PRIVATE KEY-----
-      MIIBywIBAAJhAK5YexcQVSQTeEVd23Q/xHOQYpq1wPqQH4jE/huzJfHRF7+tIsb+
-      n37Wb+LVIJOmyFMeTW459bBgbQhe6lPbmYMuuHlAY16EntevGvWFfyG7Nte4gv6v
-      yGr6xe22IJOxaQIDAQABAmAPpR7+ldeeEiUzzFVaHDLL0AQZMAAuO+qogkzvPWdF
-      SOchqy64vrafUizeJRP0S/3+EB0l6sVWMlNCOf8VjHd8AUSLh4kw7AfZr+4vqG/l
-      8S7E4MDANs7XWJcOs55H29ECMQDZ+rWJ7du5+aGZuZsRQVi6CTjaIyF5FqH0KlNS
-      eiEJ2UVL5zsuplEd2p16Tu8dAWUCMQDMwWyI2CBc4sq2Mq566AottisYV4NCI4+6
-      Tie5vWyz7yVM+yEHYgDvvCbqH6FyEbUCMQC85lFQWHrkLfrnVzuUtoaHodpM38jw
-      QLbU+6D9hqz+9fThlF9rS+Jb9sol5iW9gykCMQCFqA1NFqepenGQlWzH1ggu5qci
-      8J1B4yzDFJlh6YC3w/e5VISu6Q5rb4qHcbZVW7ECMCPDpr3dc5DGk3yR3sShawxH
-      EZ9FO0f+IqMaqYduUT4hcuSC43w6exAVAA0eA4tXGA==
+      MIIBywIBAAJhAOu3rO3cbTxfCm+YTXgrG5b4pk7wYp0rcIeeP5XIkmrqPhgu17sj
+      bkmm5WRZ2yBaxuU35VC+bucdaWXviUMn+234tvoXrkA/woxIBcN/anGjwY4T752K
+      T1BmI+HSFQ1TRQIDAQABAmEArXRx2m8UKxK8+TWX/E+sc8Hxj7Ewv/tRSVrX6362
+      z9oja2Q898awx536u4eryflBbXMJX9Tu66TVF9XCWXCk1ol6sh1FNXK23RlzcYkR
+      B2ORCm1xYDIDx5eQyy24IQFZAjEA/qiyPK+KlqDHHvN9z1YnIu4Ci1Q8ypHP0hbk
+      cpdfUhXyExR5dK9cbisiW5nnDxIzAjEA7PVxw+aOGpkPu1FOaoOgFauKfQLe72D/
+      LoGvxqn2+GrusYs4d83byK37iFRWubynAjAd+XlRT1A+vpnxeLOcTgW5RM6j27x0
+      E4mkrvEg09RycwbVXBmXtHRqu0UGBy19RqUCMQDGDBJssGr+0gTzA26t2ZtX4Urb
+      VyXrHr/JJ/045t+TGxSq8XhdsYHLhZagiBUAIisCMBp3eHtccMYfOZURY+UhS761
+      G52+1EBYZtt1BvFcwTmDPsJYmR/Li9IiFO6i6u6DSA==
       -----END RSA PRIVATE KEY-----
-    public: &alpha_public AAAAB3NzaC1yc2EAAAADAQABAAAAYQDhrEeBJCm22IsY3QAnKnU8CHTIPotvubEYfTij+pAvimwbJ0/8+y3Tav28UbWS7hyUOabPZXEBRcOFiweGyGAX/c5057P+Z5nQ8YaIbbJX7zKwsfDMIRLlgY85PjvCRns=
+    public_key: &alpha_public AAAAB3NzaC1yc2EAAAADAQABAAAAYQDrt6zt3G08XwpvmE14KxuW+KZO8GKdK3CHnj+VyJJq6j4YLte7I25JpuVkWdsgWsblN+VQvm7nHWll74lDJ/tt+Lb6F65AP8KMSAXDf2pxo8GOE++dik9QZiPh0hUNU0U=
     passphrase: &alpha_passphrase ~
   beta: &beta
-    private: &beta_private |
+    private_key: &beta_private |
       -----BEGIN RSA PRIVATE KEY-----
       Proc-Type: 4,ENCRYPTED
       DEK-Info: AES-128-CBC,C87308057B7B93891079F7BBEDD841B9
@@ -33,10 +33,10 @@ keys:
       20aW+S2UoetgxWRop13xIk7ZTVtMSE5dpFXUKaBaRAh1YxgQUXDlLxTIiN6I2cwQ
       vKbSueIdHt4+iqk3GXtGXPQmT82EzwvMEXZeTQCbLg4=
       -----END RSA PRIVATE KEY-----
-    public: &beta_public AAAAB3NzaC1yc2EAAAADAQABAAAAYQDCLY+8qnsrW/RrjDgz1b026hg9Lb78KV2c00sA4v6iSHVZoRKdnoIFr3dnWwV5Urt1U9fJJVy0fPLDWnAdYtI7U37k0GLpZhPS3ps/W9j1ZgslEQMQpvAD19yuJG/NXzk=
+    public_key: &beta_public AAAAB3NzaC1yc2EAAAADAQABAAAAYQDCLY+8qnsrW/RrjDgz1b026hg9Lb78KV2c00sA4v6iSHVZoRKdnoIFr3dnWwV5Urt1U9fJJVy0fPLDWnAdYtI7U37k0GLpZhPS3ps/W9j1ZgslEQMQpvAD19yuJG/NXzk=
     passphrase: &beta_passphrase passphrase
   gamma: &gamma
-    private: &gamma_private |
+    private_key: &gamma_private |
       -----BEGIN RSA PRIVATE KEY-----
       MIIBzAIBAAJhAPYC5Y/f1GydsdsxDld3gcILOn7hUIsShvEv8W2wo1RFHZGBKMqa
       4qonXRNijz6S5GXBH5liOd8kwZJ1FYXGTaSGlI/t86hXAxkGXvn0a0TOoKpH0Fd4
@@ -49,30 +49,32 @@ keys:
       HcOi6kShjkAvZh62Z8jSatNzA30h/XPRqnT1P/UCMQCCxmy42EaisPHQxWCxvYDr
       +kBx8m82w4A/3ODRAZqUX/8HnRut1JSFrfW+N61IUU0=
       -----END RSA PRIVATE KEY-----
-    public: &gamma_public ~ #AAAAB3NzaC1yc2EAAAADAQABAAAAYQD2AuWP39RsnbHbMQ5Xd4HCCzp+4VCLEobxL/FtsKNURR2RgSjKmuKqJ10TYo8+kuRlwR+ZYjnfJMGSdRWFxk2khpSP7fOoVwMZBl759GtEzqCqR9BXeLeVpEtUef4JEM0=
+    public_key: &gamma_public ~ #AAAAB3NzaC1yc2EAAAADAQABAAAAYQD2AuWP39RsnbHbMQ5Xd4HCCzp+4VCLEobxL/FtsKNURR2RgSjKmuKqJ10TYo8+kuRlwR+ZYjnfJMGSdRWFxk2khpSP7fOoVwMZBl759GtEzqCqR9BXeLeVpEtUef4JEM0=
     passphrase: &gamma_passphrase ~
 
 attributes: &attributes
-  keys:
+  ama-ssh-private-keys:
     unprotected: *alpha
     passphrased: *beta
     private: *gamma
     type_mismatch:
-      type: ssh-ecdsa
-      private: *alpha_private
-      public: *alpha_public
-    invalid_type:
-      type: bolgen-dsa
-      private: *alpha_private
-      public: *alpha_public
+      type: ssh-dss
+      private_key: *alpha_private
+      public_key: *alpha_public
+      expects_failure: true
     invalid_passphrase:
-      private: *beta_private
-      public: *beta_public
+      private_key: *beta_private
+      public_key: *beta_public
       passphrase: invalid
+      expects_failure: true
     key_mismatch:
-      private: *gamma_private
-      public: *alpha_public
-
+      private_key: *gamma_private
+      public_key: *alpha_public
+      expects_failure: true
+    disabled_validation:
+      private_key: *gamma_private
+      public_key: *alpha_public
+      perform_validation: false
 
 driver:
   name: docker
@@ -93,15 +95,17 @@ platforms:
   - name: ubuntu-12.04
   - name: ubuntu-14.04
   - name: ubuntu-16.04
+  - name: debian-7.0
   - name: debian-7.11
-  - name: debian-8.2
-  - name: centos-7.2
+  - name: debian-8.7
+  - name: centos-6.0
+  - name: centos-6.9
+  - name: centos-7.9
+  - name: fedora-24
+  - name: fedora-25
 
 suites:
   - name: default
     run_list:
-      - recipe[ama-ssh-private-keys::default]
-    verifier:
-      inspec_tests:
-        - test/smoke/default
+      - recipe[ama-ssh-private-keys-integration::default]
     attributes: *attributes

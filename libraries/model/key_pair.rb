@@ -1,3 +1,5 @@
+# rubocop:disable Style/Documentation
+
 module AMA
   module Chef
     module SSHPrivateKeys
@@ -11,10 +13,10 @@ module AMA
           attr_accessor :comment
 
           def normalize
-            _ = instance_variables.map do |name|
+            intermediate = instance_variables.map do |name|
               [name[1..-1], instance_variable_get(name)]
             end
-            Hash[_]
+            Hash[intermediate]
           end
 
           def to_s

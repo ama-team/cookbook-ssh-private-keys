@@ -1,3 +1,5 @@
+# rubocop:disable Style/Documentation
+
 module AMA
   module Chef
     module SSHPrivateKeys
