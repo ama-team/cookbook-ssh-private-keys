@@ -1,3 +1,8 @@
+sudo: required
+
+services:
+  - docker
+
 env:
   - PLATFORM=ubuntu
   - PLATFORM=debian
