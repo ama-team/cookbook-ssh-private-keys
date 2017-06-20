@@ -1,7 +1,3 @@
-# Work In Progress
-
-Not finished yet, sorry
-
 # Cookbook ama-ssh-private-keys
 
 [![Travis branch](https://img.shields.io/travis/ama-team/cookbook-ssh-private-keys/master.svg?style=flat-square)](https://travis-ci.org/ama-team/cookbook-ssh-private-keys)
