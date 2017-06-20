@@ -33,7 +33,8 @@ By default, keys and passphrase are validated with ssh-keygen that
 confirms that all components are what they are and match each other.
 This may be turned off as well, if desired.
 
-That seems to be cover everything important!
+Cookbook is tested against Debian 7.3+, Ubuntu 14.04+, Centos 6.0+ 
+and Fedora 24+, but generally it should work everywhere.
 
 ## Full resource specification
 

@@ -10,6 +10,6 @@ version '0.1.0'
 chef_version '>= 12', '< 14'
 
 supports 'ubuntu', '>= 12.04'
-supports 'debian', '>= 7.0'
+supports 'debian', '>= 7.3'
 supports 'fedora', '>= 24'
 supports 'centos', '>= 6.0'
