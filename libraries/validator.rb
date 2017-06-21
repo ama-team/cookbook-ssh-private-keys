@@ -22,13 +22,14 @@ module AMA
             return
           end
           unless pair.private_key
-            raise "Provided key pair #{pair.id} is missing private key"
+            message = "Provided key pair #{pair.id} is missing private key"
+            raise_invalid_key_exception(message)
           end
           public_key = generate_public_key(pair)
           unless pair.type == public_key.type
             message = "Key pair specified type #{pair.type}, but " \
               "#{public_key.type} was discovered"
-            raise message
+            raise_invalid_key_exception(message)
           end
           return unless pair.public_key && pair.public_key != public_key.data
           message = [
@@ -37,7 +38,7 @@ module AMA
             "Provided: #{pair.public_key}",
             "Generated: #{public_key.data}"
           ]
-          raise message.join(" #{$ORS}")
+          raise_invalid_key_exception(message.join(" #{$ORS}"))
         end
 
         private
@@ -51,6 +52,12 @@ module AMA
         def locate_binary
           execution = Mixlib::ShellOut.new('which', 'ssh-keygen').run_command
           execution.error? ? nil : execution.stdout.lines.first.chomp
+        end
+
+        # @param [String] message
+        def raise_invalid_key_exception(message)
+          klass = AMA::Chef::SSHPrivateKeys::Model::InvalidKeyException
+          raise klass.new(message)
         end
 
         def get_public_key_fingerprint(pair)
@@ -68,8 +75,7 @@ module AMA
         # @return [AMA::Chef::SSHPrivateKeys::Model::PublicKey]
         def generate_public_key(pair)
           execution = run_with_temporary_file(pair.private_key) do |path|
-            passphrase = pair.passphrase.nil? ? '' : pair.passphrase
-            [@binary, '-y', '-f', path, '-P', passphrase]
+            [@binary, '-y', '-f', path, '-P', pair.passphrase.to_s]
           end
           if execution.error?
             prefix = "Failed to create public key from private key #{pair.id}"
