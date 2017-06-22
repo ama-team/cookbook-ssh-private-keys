@@ -1,5 +1,7 @@
 # frozen_string_literal: true
+
 # rubocop:disable Style/BlockComments
+# rubocop:disable Metrics/BlockLength
 
 require 'allure-rspec'
 require 'chefspec'
@@ -105,9 +107,16 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 =end
 
+  root_directory = (0..2).reduce(__dir__) { |dir| ::File.dirname(dir) }
+
+  config.pattern = '**/*.spec.rb'
+  config.platform = 'ubuntu'
+  config.version = '16.04'
+  config.cookbook_path = "#{root_directory}/test/support/cookbooks"
   config.include AllureRSpec::Adaptor
+
   AllureRSpec.configure do |allure|
-    allure.output_dir = 'test/metadata/allure/functional' # default: gen/allure-results
-    allure.logging_level = Logger::WARN # logging level (default: DEBUG)
+    allure.output_dir = "#{root_directory}/test/metadata/allure/functional"
+    allure.logging_level = Logger::WARN
   end
 end

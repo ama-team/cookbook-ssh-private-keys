@@ -1,10 +1,15 @@
+# frozen_string_literal: true
+
+# rubocop:disable Metrics/LineLength
+# rubocop:disable Style/HashSyntax
+
 namespace :test do
   task :unit do
-    sh 'bundle exec rspec --default-path test/suites/unit --require _config'
+    sh 'bundle exec rspec --default-path test/suites/unit --require _config --pattern **/*.spec.rb'
   end
 
   task :functional do
-    sh 'bundle exec rspec --default-path test/suites/functional --require _config'
+    sh 'bundle exec rspec --default-path test/suites/functional --require _config --pattern **/*.spec.rb'
   end
 
   task :acceptance, [:platform] do |_, args|
@@ -43,6 +48,8 @@ namespace :lint do
 end
 
 task :lint => %i[lint:all]
+
+task :verify, [:pattern] => %i[lint test]
 
 task :default do
   sh 'bundle exec rake -AT'

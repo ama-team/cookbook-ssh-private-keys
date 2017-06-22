@@ -1,5 +1,8 @@
 # frozen_string_literal: true
+
 # rubocop:disable Style/BlockComments
+# rubocop:disable Lint/UnneededDisable
+# rubocop:disable Metrics/BlockLength
 
 require 'allure-rspec'
 
@@ -103,9 +106,14 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 =end
 
+  root_directory = (0..2).reduce(__dir__) { |dir| ::File.dirname(dir) }
+
   config.include AllureRSpec::Adaptor
+
+  config.pattern = '**/*.spec.rb'
+
   AllureRSpec.configure do |allure|
-    allure.output_dir = 'test/metadata/allure/unit' # default: gen/allure-results
-    allure.logging_level = Logger::WARN # logging level (default: DEBUG)
+    allure.output_dir = "#{root_directory}/test/metadata/allure/unit"
+    allure.logging_level = Logger::WARN
   end
 end

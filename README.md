@@ -48,6 +48,7 @@ ssh_private_key 'hackerman:default' do
   public_key_suffix '.pub'
   comment 'hack-the-time'
   perform_validation true
+  action :create # :create/
 end
 ```
 

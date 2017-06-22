@@ -11,7 +11,7 @@ machine:
 test:
   override:
     - bundle exec rake lint
-    - bundle exec rake test
+    - KITCHEN_LOCAL_YAML=.kitchen.circle.yml bundle exec rake test
   post:
     - bundle exec rake test:report
     - mv test/report/* $CIRCLE_ARTIFACTS/

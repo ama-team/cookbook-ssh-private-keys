@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 name 'ama-ssh-private-keys'
 maintainer 'AMA Team'
 maintainer_email 'ops@amagroup.ru'
