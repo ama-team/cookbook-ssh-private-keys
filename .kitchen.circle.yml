@@ -2,4 +2,4 @@
 verifier:
   name: inspec
   format: junit
-  output: test/metdata/inspec/acceptance/%{platform}-%{suite}.xml
+  output: test/metadata/inspec/acceptance/%{platform}-%{suite}.xml
