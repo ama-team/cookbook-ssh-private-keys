@@ -1,7 +1,8 @@
 # Cookbook ama-ssh-private-keys
 
-[![Travis branch](https://img.shields.io/travis/ama-team/cookbook-ssh-private-keys/master.svg?style=flat-square)](https://travis-ci.org/ama-team/cookbook-ssh-private-keys)
-[![Chef cookbook](https://img.shields.io/cookbook/v/ama-ssh-private-keys.svg?style=flat-square)](https://supermarket.chef.io/cookbooks/ama-ssh-private-keys)
+[![Supermarket](https://img.shields.io/cookbook/v/ama-ssh-private-keys.svg?style=flat-square)](https://supermarket.chef.io/cookbooks/ama-ssh-private-keys)
+[![CircleCI / master](https://img.shields.io/circleci/project/github/ama-team/cookbook-ssh-private-keys/master.svg?style=flat-square)](https://circleci.com/gh/ama-team/cookbook-ssh-private-keys/tree/master)
+[![Scrutinizer](https://img.shields.io/scrutinizer/g/ama-team/cookbook-ssh-private-keys.svg?style=flat-square)](https://scrutinizer-ci.com/g/ama-team/cookbook-ssh-private-keys/)
 
 This cookbook allows end user to install private keys for specified 
 accounts.
@@ -41,14 +42,14 @@ ssh_private_key 'hackerman:default' do
   user 'hackerman' # required
   private_key '' # required
   public_key ''
-  passphrase 'choose life'
+  passphrase 'kung-fury'
   parent_directory '/workspace'
   private_key_mode '0600'
   public_key_mode '0644'
   public_key_suffix '.pub'
   comment 'hack-the-time'
   perform_validation true
-  action :create # :create/
+  action :create # :create/install, :delete/remove
 end
 ```
 
