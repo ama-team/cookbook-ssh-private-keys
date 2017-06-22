@@ -37,6 +37,7 @@ and Fedora 24+, but generally it should work everywhere.
 ```ruby
 ssh_private_key 'hackerman:default' do
   id 'id_rsa' # name_property
+  type 'ssh-rsa' # ssh-(rsa|dss|ed25519), ecdsa-sha2-nistp(256|384|521)
   user 'hackerman' # required
   private_key '' # required
   public_key ''

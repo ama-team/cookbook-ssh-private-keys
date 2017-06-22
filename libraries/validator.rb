@@ -15,7 +15,7 @@ module AMA
         def validate!(pair)
           lazy_initialize
           unless @binary
-            Chef::Log.warn(
+            ::Chef::Log.warn(
               "Can't validate key pair #{pair.id}: " \
               'ssh-keygen executable not found'
             )

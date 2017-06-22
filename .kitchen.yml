@@ -90,6 +90,8 @@ provisioner:
 verifier:
   name: inspec
   attributes: *attributes
+  inspec_tests:
+    - path: test/suites/acceptance/default
 
 platforms:
   - name: ubuntu-12.04
@@ -107,5 +109,5 @@ platforms:
 suites:
   - name: default
     run_list:
-      - recipe[ama-ssh-private-keys-integration::default]
+      - recipe[ama-ssh-private-keys-acceptance::default]
     attributes: *attributes
