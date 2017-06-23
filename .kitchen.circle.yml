@@ -1,0 +1,5 @@
+---
+verifier:
+  name: inspec
+  format: junit
+  output: test/metadata/inspec/acceptance/%{platform}-%{suite}.xml

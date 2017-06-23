@@ -11,9 +11,12 @@ Gemfile.lock
 bin/*
 .bundle/*
 
-# test kitchen
+# Testing
 .kitchen/
 .kitchen.local.yml
+Dockerfile*
+test/report
+test/metadata
 
 # Chef
 Berksfile.lock

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module AMA
   module Chef
     module SSHPrivateKeys
@@ -11,7 +13,7 @@ module AMA
           Etc.getpwnam(user).dir
         rescue ArgumentError
           directory = guess_user_home_directory(user)
-          Chef::Log.warn(
+          ::Chef::Log.warn(
             "User #{user} hasn't been found at compile time, " \
             "using #{directory} as user home directory"
           )

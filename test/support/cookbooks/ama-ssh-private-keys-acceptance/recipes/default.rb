@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 #
-# Cookbook:: ama-ssh-private-keys-integration
+# Cookbook:: ama-ssh-private-keys-acceptance
 # Recipe:: default
 #
 # The MIT License (MIT)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 ruby '2.3.0'
 
@@ -5,6 +7,7 @@ ruby '2.3.0'
 group :development do
   gem 'foodcritic', '~> 11.2.0'
   gem 'rubocop', '~> 0.49.0'
+  gem 'rake', '~> 12.0.0'
 end
 
 group :testing do
@@ -15,4 +18,5 @@ group :testing do
   gem 'berkshelf', '~> 5.6.5'
   gem 'chefspec', '~> 7.1.0'
   gem 'rspec', '~> 3.6.0'
+  gem 'allure-rspec', '~> 0.8.0'
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 # Cookbook:: ama-ssh-private-keys
 # Recipe:: default
@@ -24,14 +26,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-data_bag_name = ['ama']['ssh-private-keys']['data-bag']
+data_bag_name = node['ama']['ssh-private-keys']['data-bag']
 data_bag(data_bag_name).each do |id|
   data = data_bag_item(data_bag_name, id)
   ssh_private_key id do
     %w[
       user type private_key public_key passphrase parent_directory
       private_key_mode public_key_mode public_key_suffix comment
-      validate_key
+      perform_validation
     ].each do |property|
       send(property, data[property]) if data.key?(property)
     end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 definitions = attribute('ama-ssh-private-keys', {})
 
 definitions.each do |id, definition|

@@ -1,3 +1,8 @@
+# frozen_string_literal: true
+
+# rubocop:disable Metrics/BlockLength
+# rubocop:disable Metrics/AbcSize
+
 resource_name :ssh_private_key
 default_action :create
 
@@ -17,7 +22,7 @@ property :user, String, required: true
 property :type, String, equal_to: types, default: 'ssh-rsa'
 property :private_key, String, required: true, sensitive: true
 property :public_key, [String, NilClass], default: nil, sensitive: true
-property :passphrase, String, required: false, sensitive: true
+property :passphrase, [String, NilClass], required: false, sensitive: true
 property :parent_directory, String, required: false
 property :private_key_mode, String, default: '0600'
 property :public_key_mode, String, default: '0644'
@@ -27,6 +32,31 @@ property :perform_validation, [TrueClass, FalseClass], default: true
 
 action_class do
   include AMA::Chef::SSHPrivateKeys::ResourceHelpers
+
+  def create
+    data = new_resource
+    directory = key_directory
+    private_key_path = "#{directory}/#{data.id}"
+    public_key_path = "#{private_key_path}#{data.public_key_suffix}"
+
+    create_key_directory(directory)
+
+    validate_key_pair!(compute_pair) if data.perform_validation
+    file private_key_path do
+      content data.private_key
+      owner data.user
+      mode data.private_key_mode
+      sensitive true
+    end
+
+    file public_key_path do
+      content data.public_key if data.public_key
+      owner data.user
+      mode data.public_key_mode
+      sensitive true
+      action(data.public_key ? :create : :delete)
+    end
+  end
 
   def delete
     data = new_resource
@@ -43,34 +73,17 @@ action_class do
 end
 
 action :create do
-  data = new_resource
-  directory = key_directory
-  private_key_path = "#{directory}/#{data.id}"
-  public_key_path = "#{private_key_path}#{data.public_key_suffix}"
-
-  create_key_directory(directory)
-
-  validate_key_pair!(compute_pair) if data.perform_validation
-  file private_key_path do
-    content data.private_key
-    owner data.user
-    mode data.private_key_mode
-    sensitive true
-  end
-
-  file public_key_path do
-    content data.public_key if data.public_key
-    owner data.user
-    mode data.public_key_mode
-    sensitive true
-    action(data.public_key ? :create : :delete)
-  end
+  create
 end
 
-action :remove do
-  delete
+action :install do
+  create
 end
 
 action :delete do
+  delete
+end
+
+action :remove do
   delete
 end

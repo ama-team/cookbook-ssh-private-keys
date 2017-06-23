@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 module AMA
   module Chef
     module SSHPrivateKeys
-      module Model
+      module Exception
         class InvalidKeyException < ArgumentError
         end
       end

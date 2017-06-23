@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 resource_name :key_from_attributes
 default_action :create
 

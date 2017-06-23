@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 name 'ama-ssh-private-keys'
 maintainer 'AMA Team'
 maintainer_email 'ops@amagroup.ru'
 source_url 'https://github.com/ama-team/cookbook-ssh-private-keys'
 issues_url 'https://github.com/ama-team/cookbook-ssh-private-keys/issues'
 license 'MIT'
-description 'Installs/Configures ama-ssh-private-keys'
-long_description 'Installs/Configures ama-ssh-private-keys'
+description 'Manages SSH private keys'
+long_description 'Manages SSH private keys'
 version '0.2.0'
 chef_version '>= 12', '< 14'
 

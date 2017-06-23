@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SSHPrivateKey < Inspec.resource(1)
   name 'ssh_private_key'
 

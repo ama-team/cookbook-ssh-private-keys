@@ -1,0 +1,19 @@
+machine:
+  ruby:
+    version: 2.3.0
+  services:
+    - docker
+  post:
+    - sudo apt-add-repository ppa:yandex-qatools/allure-framework -y
+    - sudo apt-get update -yq
+    - sudo apt-get install allure-commandline -yq
+
+test:
+  override:
+    - bundle exec rake lint
+    - KITCHEN_LOCAL_YAML=.kitchen.circle.yml bundle exec rake test
+  post:
+    - bundle exec rake test:report
+    - mv test/report/* $CIRCLE_ARTIFACTS/
+    - mkdir -p $CIRCLE_TEST_REPORTS/rspec
+    - mv test/metadata/inspec/acceptance/* $CIRCLE_TEST_REPORTS/rspec/
