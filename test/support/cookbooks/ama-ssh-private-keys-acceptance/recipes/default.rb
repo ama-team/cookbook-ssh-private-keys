@@ -30,6 +30,5 @@ node['ama-ssh-private-keys'].each do |id, definition|
   key_from_attributes id do
     source definition.fetch('source', id)
     expects_failure definition.fetch('expects_failure', false)
-    perform_validation definition.fetch('perform_validation', true)
   end
 end

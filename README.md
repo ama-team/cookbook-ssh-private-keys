@@ -12,46 +12,87 @@ Cookbook provides self-explanatory `ssh_private_key` resource:
 ```ruby
 ssh_private_key 'id_rsa' do
   user 'jodie'
-  private_key '-----BEGIN PRIVATE KEY-----...'
-  public_key 'AAAAB3NzaC1kc...'
-  passphrase 'i beg you pardon?'
+  content '-----BEGIN PRIVATE KEY-----...'
 end
 ```
 
-This will create `id_rsa` and `id_rsa.pub` in jodie's `~/.ssh` folder. If 
-jodie account doesn't exist yet, `/home/jodie/.ssh` will be used (or
-path specified in the resource - see below). If you are a super lazy
-person, there's `default` recipe that will take data bag with name
-specified in `['ama']['ssh-private-keys']['data-bag']` attribute
-('ssh-private-keys' by default) and iterate it's contents, creating a
-new resource for each item.
+This will save provided key as `{jodie's home}/.ssh/id_rsa` with mode 
+`0600`.
 
-By default, keys and passphrase are validated with ssh-keygen that 
-confirms that all components are what they are and match each other.
-This may be turned off as well, if desired.
+Cookbook also exposes `default` recipe that will take all items from
+data bag with name specified as `[ama][ssh-private-keys][data-bag]`
+attribute (`ssh-private-keys` by default) and simply pass them to 
+resource.
 
-Cookbook is tested against Debian 7.3+, Ubuntu 14.04+, Centos 6.0+ 
-and Fedora 24+, but generally it should work everywhere.
+If you want to use automatic public key generation and/or validation,
+additional information is specified below.
+
+**Eye-catching warning: if you are using this cookbook, you're
+quite certainly working with keys providing some sensitive access. 
+Ensure and double check that you minimize risk of exposure of your 
+keys as much as possible. This cookbook, on it's behalf, tries to do
+the same.**
+
+## Requirements
+
+- Chef 12+
+- Ruby 2.3.0+
+- Installed and available on $PATH ssh-keygen binary for validation
+and public key generation (disabled by default)
+
+## Tested against
+
+- Debian 7.3+
+- Ubuntu 14.04+
+- Centos 6.0+
+- Fedora 24+
+
+Generally internals are very simple, so it should run anywhere.
 
 ## Full resource specification
 
 ```ruby
 ssh_private_key 'hackerman:default' do
   id 'id_rsa' # name_property
-  type 'ssh-rsa' # ssh-(rsa|dss|ed25519), ecdsa-sha2-nistp(256|384|521)
   user 'hackerman' # required
-  private_key '' # required
-  public_key ''
-  passphrase 'kung-fury'
+  type 'ssh-rsa' # ssh-(rsa|dss|ed25519), ecdsa-sha2-nistp(256|384|521)
+  content '' # required
+  
   parent_directory '/workspace'
-  private_key_mode '0600'
+  mode '0600'
+  
+  # optional, required for validation / public key creation
+  passphrase '2018' 
+  
+  # optional, required for validation / public key creation
+  comment 'hack-the-time'
+  
+  install_public_key true # defaults to false
   public_key_mode '0644'
   public_key_suffix '.pub'
-  comment 'hack-the-time'
-  perform_validation true
+  public_key '' # if not specified, public key will be derived from private key
+  
+  perform_validation true # defaults to false
+  
   action :create # :create/install, :delete/remove
 end
 ```
+
+If `install_public_key` is set to true, resource will create public key
+file next to private key file. If public key is not supplied, it will 
+be derived from private key (passphrase may be needed to do so).
+
+If `perform_validation` is set to true, internal validator will make
+following assertions before any file will be installed:
+
+- Public key may be derived from supported private key
+- If public key is provided, it matches generated public key
+- Provided type matches type specified in ssh-keygen analysis
+
+All not-safe-for-exposure resource properties are declared as sensitive
+and won't appear in logs. Private keys are written to temporary files 
+(mode 0600) for validation / public key derivation which are erased
+using `ensure` blocks.
 
 # Licensing
 

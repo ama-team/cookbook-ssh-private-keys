@@ -49,30 +49,44 @@ keys:
       HcOi6kShjkAvZh62Z8jSatNzA30h/XPRqnT1P/UCMQCCxmy42EaisPHQxWCxvYDr
       +kBx8m82w4A/3ODRAZqUX/8HnRut1JSFrfW+N61IUU0=
       -----END RSA PRIVATE KEY-----
-    public_key: &gamma_public ~ #AAAAB3NzaC1yc2EAAAADAQABAAAAYQD2AuWP39RsnbHbMQ5Xd4HCCzp+4VCLEobxL/FtsKNURR2RgSjKmuKqJ10TYo8+kuRlwR+ZYjnfJMGSdRWFxk2khpSP7fOoVwMZBl759GtEzqCqR9BXeLeVpEtUef4JEM0=
+    public_key: &gamma_public AAAAB3NzaC1yc2EAAAADAQABAAAAYQD2AuWP39RsnbHbMQ5Xd4HCCzp+4VCLEobxL/FtsKNURR2RgSjKmuKqJ10TYo8+kuRlwR+ZYjnfJMGSdRWFxk2khpSP7fOoVwMZBl759GtEzqCqR9BXeLeVpEtUef4JEM0=
     passphrase: &gamma_passphrase ~
 
 attributes: &attributes
   ama-ssh-private-keys:
-    unprotected: *alpha
-    passphrased: *beta
-    private: *gamma
+    basic:
+      content: *alpha_private
+    unprotected:
+      content: *alpha_private
+      public_key: *alpha_public
+      perform_validation: true
+    passphrased:
+      content: *beta_private
+      public_key: *beta_public
+      passphrase: *beta_passphrase
+      perform_validation: true
+    public_key_generation:
+      content: *alpha_private
+      install_public_key: true
     type_mismatch:
       type: ssh-dss
-      private_key: *alpha_private
+      content: *alpha_private
       public_key: *alpha_public
       expects_failure: true
+      perform_validation: true
     invalid_passphrase:
-      private_key: *beta_private
+      content: *beta_private
       public_key: *beta_public
       passphrase: invalid
       expects_failure: true
+      perform_validation: true
     key_mismatch:
-      private_key: *gamma_private
+      content: *gamma_private
       public_key: *alpha_public
       expects_failure: true
+      perform_validation: true
     disabled_validation:
-      private_key: *gamma_private
+      content: *gamma_private
       public_key: *alpha_public
       perform_validation: false
 

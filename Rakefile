@@ -1,15 +1,38 @@
 # frozen_string_literal: true
 
 # rubocop:disable Metrics/LineLength
+# rubocop:disable Metrics/BlockLength
 # rubocop:disable Style/HashSyntax
 
 namespace :test do
-  task :unit do
-    sh 'bundle exec rspec --default-path test/suites/unit --require _config --pattern **/*.spec.rb'
-  end
-
-  task :functional do
-    sh 'bundle exec rspec --default-path test/suites/functional --require _config --pattern **/*.spec.rb'
+  %i[unit functional].each do |type|
+    task type do
+      sh "bundle exec rspec --default-path test/suites/#{type} --require _config --pattern **/*.spec.rb"
+    end
+    namespace type do
+      task :report do
+        sh "allure generate -o test/report/allure/#{type} test/metadata/allure/#{type}"
+      end
+      task :clean do
+        %w[metadata report].each do |folder|
+          FileUtils.rm_rf(::File.join(__dir__, 'test', folder, type.to_s))
+        end
+      end
+      task :'with-report' do |task|
+        clean_task = Rake::Task[:"test:#{type}:clean"]
+        clean_task.invoke(task)
+        clean_task.reenable
+        begin
+          target_task = Rake::Task[:"test:#{type}"]
+          target_task.invoke(task)
+        ensure
+          target_task.reenable
+          report_task = Rake::Task[:"test:#{type}:report"]
+          report_task.invoke(task)
+          report_task.reenable
+        end
+      end
+    end
   end
 
   task :acceptance, [:platform] do |_, args|
@@ -26,7 +49,7 @@ namespace :test do
   end
 
   task :report do
-    sh 'allure generate -o test/report/allure test/metadata/allure'
+    sh 'allure generate -o test/report/allure/combined test/metadata/allure'
   end
 
   task :all, [:platform] => %i[unit functional acceptance]

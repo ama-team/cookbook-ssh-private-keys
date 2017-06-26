@@ -30,12 +30,9 @@ data_bag_name = node['ama']['ssh-private-keys']['data-bag']
 data_bag(data_bag_name).each do |id|
   data = data_bag_item(data_bag_name, id)
   ssh_private_key id do
-    %w[
-      user type private_key public_key passphrase parent_directory
-      private_key_mode public_key_mode public_key_suffix comment
-      perform_validation
-    ].each do |property|
-      send(property, data[property]) if data.key?(property)
+    self.class.properties.keys.each do |property_name|
+      next unless data.key?(property_name)
+      send(property_name, data[property_name])
     end
   end
 end

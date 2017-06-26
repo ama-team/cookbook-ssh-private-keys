@@ -3,51 +3,41 @@
 require 'tempfile'
 require 'English'
 
-require_relative 'ssh_keygen_handler'
+require_relative 'generator'
 require_relative 'exception/invalid_key_exception'
 
 module AMA
   module Chef
     module SSHPrivateKeys
-      # Validates provided key pair using ssh-keygen
+      # Simple utility for validating provided key pair
       class Validator
-        def initialize
-          @handler = nil
-        end
-
-        # @param [AMA::Chef::SSHPrivateKeys::Model::KeyPair] pair
-        def validate!(pair)
-          unless pair.private_key
-            message = "Provided key pair #{pair.id} is missing private key"
+        # @param [AMA::Chef::SSHPrivateKeys::Model::KeyPair] key_pair
+        def validate!(key_pair)
+          generated_public_key = generator.generate_public_key(
+            key_pair.compute_private_key,
+            key_pair.comment
+          )
+          unless key_pair.type == generated_public_key.type
+            message = "Key was provided with type #{key_pair.type}, but " \
+              "#{generated_public_key.type} was discovered"
             raise_invalid_key_exception(message)
           end
-          public_key = handler.generate_public_key(pair)
-          unless pair.type == public_key.type
-            message = "Key pair specified type #{pair.type}, but " \
-              "#{public_key.type} was discovered"
-            raise_invalid_key_exception(message)
-          end
-          return unless pair.public_key && pair.public_key != public_key.data
-          message = [
-            'Generated public key differs from ' \
-              "provided public key `#{pair.id}`",
-            "Provided: #{pair.public_key}",
-            "Generated: #{public_key.data}"
-          ]
-          raise_invalid_key_exception(message.join(" #{$ORS}"))
+          public_key = key_pair.public_key
+          return unless public_key && public_key != generated_public_key.content
+          message = 'Generated public key differs from provided public key'
+          raise_invalid_key_exception(message)
         end
 
         private
 
-        def handler
-          return @handler if @handler
-          binary = SSHKeygenHandler.locate_binary!
-          @handler = SSHKeygenHandler.new(binary)
+        def generator
+          return @generator if @generator
+          @generator = Generator.new(Generator.locate_binary!)
         end
 
         # @param [String] message
         def raise_invalid_key_exception(message)
-          klass = AMA::Chef::SSHPrivateKeys::Exception::InvalidKeyException
+          klass = ::AMA::Chef::SSHPrivateKeys::Exception::InvalidKeyException
           raise klass, message
         end
       end
