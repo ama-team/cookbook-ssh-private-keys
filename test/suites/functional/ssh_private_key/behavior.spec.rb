@@ -156,5 +156,31 @@ describe 'resource ssh_private_key:' do
         )
       end
     end
+
+    it 'should not invoke ssh-keygen if type is not supplied' do |test_case|
+      expect(Mixlib::ShellOut).not_to(
+        receive(:new).with('/usr/bin/ssh-keygen', any_args)
+      )
+
+      test_case.step 'converge' do
+        expect(chef_run).to create_file '/home/jodie/.ssh/default'
+        expect(chef_run).not_to create_file '/home/jodie/.ssh/default.pub'
+      end
+    end
+
+    it 'should invoke ssh-keygen if type is not supplied and public key installation requested' do |test_case|
+      properties = resource.clone
+      properties[:install_public_key] = true
+      stub_data_bag_item('ssh-private-keys', 'default').and_return(properties)
+
+      expect(Mixlib::ShellOut).to(
+        receive(:new).with('/usr/bin/ssh-keygen', any_args).at_least(:once)
+      )
+
+      test_case.step 'converge' do
+        expect(chef_run).to create_file '/home/jodie/.ssh/default'
+        expect(chef_run).to create_file '/home/jodie/.ssh/default.pub'
+      end
+    end
   end
 end

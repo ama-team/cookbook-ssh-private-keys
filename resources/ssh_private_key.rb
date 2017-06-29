@@ -18,7 +18,7 @@ ecdsa_types = %w[256 384 521].map { |length| "ecdsa-sha2-nistp#{length}" }
 types = [*ssh_types, *ecdsa_types].reduce([]) do |carrier, type|
   carrier.push(type, type.to_sym)
 end
-property :type, [String, Symbol], equal_to: types, default: 'ssh-rsa'
+property :type, [String, Symbol, NilClass], equal_to: [*types, nil], required: false
 
 property :mode, String, default: '0600'
 property :parent_directory, [String, NilClass], required: false

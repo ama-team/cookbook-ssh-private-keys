@@ -17,7 +17,7 @@ module AMA
             key_pair.compute_private_key,
             key_pair.comment
           )
-          unless key_pair.type == generated_public_key.type
+          if key_pair.type && key_pair.type != generated_public_key.type
             message = "Key was provided with type #{key_pair.type}, but " \
               "#{generated_public_key.type} was discovered"
             raise_invalid_key_exception(message)
