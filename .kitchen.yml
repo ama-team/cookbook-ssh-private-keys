@@ -56,15 +56,18 @@ attributes: &attributes
   ama-ssh-private-keys:
     basic:
       content: *alpha_private
+      install_public_key: true
     unprotected:
       content: *alpha_private
       public_key: *alpha_public
       perform_validation: true
+      install_public_key: true
     passphrased:
       content: *beta_private
       public_key: *beta_public
       passphrase: *beta_passphrase
       perform_validation: true
+      install_public_key: true
     public_key_generation:
       content: *alpha_private
       install_public_key: true
@@ -86,9 +89,11 @@ attributes: &attributes
       expects_failure: true
       perform_validation: true
     disabled_validation:
+      type: ssh-rsa
       content: *gamma_private
       public_key: *alpha_public
       perform_validation: false
+      install_public_key: true
 
 driver:
   name: docker

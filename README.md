@@ -64,13 +64,15 @@ ssh_private_key 'hackerman:default' do
   # optional, required for validation / public key creation
   passphrase '2018' 
   
-  # optional, required for validation / public key creation
+  # optional, required for public key creation
   comment 'hack-the-time'
   
   install_public_key true # defaults to false
   public_key_mode '0644'
   public_key_suffix '.pub'
-  public_key '' # if not specified, public key will be derived from private key
+  # if not specified, public key will be derived from private key
+  # using ssh-keygen
+  public_key ''
   
   perform_validation true # defaults to false
   
@@ -87,12 +89,13 @@ following assertions before any file will be installed:
 
 - Public key may be derived from supported private key
 - If public key is provided, it matches generated public key
-- Provided type matches type specified in ssh-keygen analysis
+- If key type is provided, it matches type recovered by ssh-keygen
 
 All not-safe-for-exposure resource properties are declared as sensitive
 and won't appear in logs. Private keys are written to temporary files 
 (mode 0600) for validation / public key derivation which are erased
-using `ensure` blocks.
+using `ensure` blocks - only newer ssh-keygen versions accept stdin 
+for reading.
 
 # Licensing
 

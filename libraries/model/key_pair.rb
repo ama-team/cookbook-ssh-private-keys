@@ -22,7 +22,7 @@ module AMA
           end
 
           def compute_public_key
-            return nil unless public_key and type
+            return nil unless public_key && type
             klass = ::AMA::Chef::SSHPrivateKeys::Model::PublicKey
             klass.new(type, public_key, comment)
           end

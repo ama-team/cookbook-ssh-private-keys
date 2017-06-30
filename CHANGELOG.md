@@ -6,8 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Changed
-- **BC** Revamped resource specification, now it has different fields and may
-generate public key itself. 
+- **[BC]** Revamped resource specification, now it has different fields and may
+generate public key itself.
 
 ## [0.1.1] - 2017-06-23
 ### Changed

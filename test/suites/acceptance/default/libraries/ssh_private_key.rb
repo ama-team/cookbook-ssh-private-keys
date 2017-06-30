@@ -25,6 +25,6 @@ class SSHPrivateKey < Inspec.resource(1)
   end
 
   def to_s
-    "ssh private key #{@path}"
+    "ssh_private_key #{@path}"
   end
 end
