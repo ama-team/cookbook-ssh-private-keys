@@ -11,7 +11,7 @@ default_action :create
 
 property :id, String, name_property: true
 property :user, [String, Symbol], required: true
-property :content, String, required: true, sensitive: true
+property :content, String, required: false, sensitive: true
 
 ssh_types = %w[rsa dsa dss].map { |type| "ssh-#{type}" }
 ecdsa_types = %w[256 384 521].map { |length| "ecdsa-sha2-nistp#{length}" }
@@ -39,6 +39,9 @@ action_class do
 
   def create
     data = new_resource
+    unless data.content
+      raise ::Chef::Exceptions::ValidationFailed, 'content is required'
+    end
     key_pair = provided_key_pair
 
     if data.perform_validation

@@ -1,19 +1,102 @@
-machine:
-  ruby:
-    version: 2.3.0
-  services:
-    - docker
-  post:
-    - sudo apt-add-repository ppa:yandex-qatools/allure-framework -y
-    - sudo apt-get update -yq
-    - sudo apt-get install allure-commandline -yq
+parameters:
+  jabba:
+    version: &jabba_version 0.7.0
+    cache_key: &jabba_cache_key v1-jabba-0.7.0
+  java:
+    version: &java_version zulu@1.8.131
+  allure:
+    version: &allure_version 2.3.1
+    cache_key: &allure_cache_key v1-allure-2.3.1
+  bundler:
+    cache_key: &bundler_cache_key v1-bundler-{{ checksum "Gemfile" }}
 
-test:
-  override:
-    - bundle exec rake lint
-    - KITCHEN_LOCAL_YAML=.kitchen.circle.yml bundle exec rake test
-  post:
-    - bundle exec rake test:report
-    - mv test/report/* $CIRCLE_ARTIFACTS/
-    - mkdir -p $CIRCLE_TEST_REPORTS/rspec
-    - mv test/metadata/inspec/acceptance/* $CIRCLE_TEST_REPORTS/rspec/
+version: 2
+jobs:
+  build:
+    machine: true
+    working_directory: /tmp/workspace
+    environment:
+      JABBA_VERSION: *jabba_version
+      JAVA_VERSION: *java_version
+      ALLURE_VERSION: *allure_version
+    steps:
+      - checkout
+      - run:
+          name: 'Info: Environment'
+          command: |
+            ruby --version
+            bundle --version
+      - run:
+          name: 'Setup: Chores'
+          command: |
+            mkdir -p test/metadata
+      - restore-cache:
+          key: *bundler_cache_key
+      - restore-cache:
+          key: *jabba_cache_key
+      - restore-cache:
+          key: *allure_cache_key
+      - run:
+          name: 'Setup: Install dependencies'
+          command: bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3
+      - type: save-cache
+        key: *bundler_cache_key
+        paths:
+          - vendor/bundle
+          - Gemfile.lock
+      - run:
+          name: 'Setup: Install Jabba & Java'
+          command: |
+            set -euxo pipefail
+            sudo ln -sf ~/.jabba/bin/jabba /usr/local/bin/jabba
+            [ ! -d ~/.jabba ] || exit 0
+            curl -sL https://github.com/shyiko/jabba/raw/master/install.sh | bash && . ~/.jabba/jabba.sh
+            jabba install $JAVA_VERSION
+      - type: save-cache
+        key: *jabba_cache_key
+        paths:
+          - ~/.jabba
+      - run:
+          name: 'Setup: Install Allure'
+          command: |
+            set -euxo pipefail
+            sudo ln -sf ~/allure/bin/allure /usr/local/bin/allure
+            [ ! $(which allure) ] || exit 0
+            curl -L "https://dl.bintray.com/qameta/generic/io/qameta/allure/allure/$ALLURE_VERSION/allure-$ALLURE_VERSION.zip" > /tmp/allure.zip
+            unzip /tmp/allure.zip -d /tmp/allure
+            mkdir -p ~/allure
+            sudo mv /tmp/allure/*/* ~/allure
+      - type: save-cache
+        key: *allure_cache_key
+        paths:
+          - ~/allure
+      - run:
+          name: 'Setup: Install Vendored Gems'
+          command: bundle exec rake vendor
+      - run:
+          name: 'Validation: Lint'
+          command: bundle exec rake lint:html
+          when: always
+      - run:
+          name: 'Validation: Unit Testing'
+          command: bundle exec rake test:unit
+      - run:
+          name: 'Validation: Functional Testing'
+          command: bundle exec rake test:functional
+      - run:
+          name: 'Validation: Acceptance Testing'
+          command: bundle exec rake test:acceptance
+      - run:
+          name: 'Report: Generate Allure report'
+          command: |
+            export JAVA_HOME="$(jabba which $JAVA_VERSION)"
+            bundle exec rake test:report
+          when: always
+      - type: store-artifacts
+        path: test/metadata
+        destination: metadata
+        when: always
+      - type: store-artifacts
+        path: test/report
+        destination: report
+        when: always

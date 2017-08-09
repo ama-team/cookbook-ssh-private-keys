@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 # rubocop:disable Style/BlockComments
-# rubocop:disable Metrics/BlockLength
 
 require 'allure-rspec'
 require 'chefspec'

@@ -109,6 +109,8 @@ provisioner:
 verifier:
   name: inspec
   attributes: *attributes
+  format: <% if ENV['INSPEC_DEBUG']%>documentation<% else %>junit<% end %>
+  output: <% if ENV['INSPEC_DEBUG']%>'-'<% else %>test/metadata/junit/acceptance/TEST-%{suite}-on-%{platform}.xml<% end %>
   inspec_tests:
     - path: test/suites/acceptance/default
 
