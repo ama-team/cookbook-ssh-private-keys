@@ -9,7 +9,7 @@ license 'MIT'
 description 'Manages SSH private keys'
 long_description 'Manages SSH private keys'
 version '0.2.2'
-chef_version '>= 12', '< 14'
+chef_version '>= 12'
 
 supports 'ubuntu', '>= 12.04'
 supports 'debian', '>= 7.3'
